@@ -24,7 +24,7 @@ export class CounterApp extends DDDSuper(I18NMixin(LitElement)) {
     this.t = this.t || {};
     this.t = {
       ...this.t,
-      title: "Title",
+      title: "Title Haidahhh",
     };
     this.registerLocalization({
       context: this,
