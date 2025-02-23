@@ -24,7 +24,7 @@ export class CounterApp extends DDDSuper(I18NMixin(LitElement)) {
     this.t = this.t || {};
     this.t = {
       ...this.t,
-      title: "Title Haidahhh",
+      title: "Title",
     };
     this.registerLocalization({
       context: this,
@@ -56,15 +56,18 @@ export class CounterApp extends DDDSuper(I18NMixin(LitElement)) {
       :host {
         display: block;
         color: var(--ddd-theme-primary);
-        background-color: var(--ddd-theme-accent);
         font-family: var(--ddd-font-navigation);
       }
 
-      :host([counter="9"]) {
+      :host([counter="18"]) .counter,
+      :host([counter="21"]) .counter,
+      :host([isMin]) .counter,
+      :host([isMax]) .counter{
         display: block;
-        color: var(--ddd-theme-default-azure);
-        
+        color: var(--ddd-theme-default-roarMaxlight);
+        background-color: var(--ddd-theme-default-athertonViolet);
       }
+
       .wrapper {
         margin: var(--ddd-spacing-2);
         padding: var(--ddd-spacing-4);
@@ -73,7 +76,34 @@ export class CounterApp extends DDDSuper(I18NMixin(LitElement)) {
         font-size: var(--counter-app-label-font-size, var(--ddd-font-size-s));
       }
       .counter{
-        color: purple;
+        color: var(--ddd-theme-default-creekTeal);
+        background-color: var(--ddd-theme-default-roarMaxlight);
+        border-radius: 10px;
+        border: dashed 7px;
+        text-align: center;
+        font-size: 7em;
+        padding: 6px;
+        margin: auto;
+      }
+      .button {
+        display: flex;
+        justify-content: center; 
+        align-items: center; 
+        gap: 10px;
+        padding:10px;
+      }
+
+      button{
+        cursor: pointer;
+        font: 1.2rem bold;
+        padding: 5px;
+        gap: 10px;
+        width: 5em;
+        background-color: var(--ddd-theme-default-creekTeal);
+      }
+      button:disabled{
+        cursor: not-allowed;
+        background-color: var(--ddd-theme-default-limestoneGray);
       }
     `];
   }
@@ -87,7 +117,7 @@ export class CounterApp extends DDDSuper(I18NMixin(LitElement)) {
 
   decrease(){
     if ((this.counter-1) >= this.min){
-      this.counter = this.counter - 1
+      this.counter = this.counter - 1;
     }
   }
 
@@ -95,9 +125,19 @@ export class CounterApp extends DDDSuper(I18NMixin(LitElement)) {
     super.updated(changedProperties);
     if (changedProperties.has("counter")){
       // console.log("count changed to: ", this.counter)
-      if(this.counter === 7){
+      if(this.counter === 21){
         this.makeItRain();
       }
+    }
+    if(this.counter === this.min){
+      this.setAttribute("isMin", ""); 
+      } else {
+        this.removeAttribute("isMin"); 
+    }
+    if(this.counter === this.max){
+      this.setAttribute("isMax", ""); 
+      } else {
+        this.removeAttribute("isMax"); 
     }
   }
 
@@ -128,19 +168,11 @@ export class CounterApp extends DDDSuper(I18NMixin(LitElement)) {
         <div class="wrapper">
         <div class="counter">${this.counter}</div>
         <div class="button">
-          <button @click=${this.increase}>ini+</button>
-          <button @click=${this.decrease}>ini-</button>
-        </div>
-        <!-- <h3><span>${this.t.title}:</span> ${this.title}</h3> -->
-        <!-- <slot></slot> -->
-        <!-- <button @click=${this.clickAdd}>Increment</button>
-        <button>Decrement</button> -->
-        </div>
+          <button @click=${this.decrease} ?disabled="${this.min === this.counter}">-</button>
+          <button @click=${this.increase} ?disabled="${this.max === this.counter}">+</button>
       </confetti-container>
     `;
   }
-
-
 
   /**
    * haxProperties integration via file reference
